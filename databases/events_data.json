@@ -1,0 +1,19 @@
+{
+"idcount":2,
+"2026":{
+    "ids":["1"],
+    "timestamps":[["2026-2-3 09:00:00","2026-2-3 17:00:00",[[["Material de Capacitación Evangelística (Español)",2],[]],[]]]],
+    "1":{
+        "1":
+        {
+        "nombre":"Entrega de Recursos",
+        "fecha1": "5/2/26",
+        "fecha2": "8/2/26",
+        "lugar": "Mexico (Tribus)",
+        "recursos": [["Camion",1],["Equipo de entrega",1],["Biblias en Español",30]]
+        }
+
+    }
+ }
+   
+}

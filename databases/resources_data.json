@@ -1,0 +1,26 @@
+{
+"humanos":{
+"Kendrick Forest":1,
+"Paul Michael":1
+    
+
+},
+"materiales":
+{
+"Material de Capacitación Evangelística (Español)":[70,1],
+"Material de Capacitación Pastoral (Español)":[70,2],
+"Material de Capacitación Ministerial (Español)":[70,3],
+"Material de Capacitación Evangelística (Portugués)":[30,4],
+"Material de Capacitación Pastoral (Portugués)":[30,5],
+"Material de Capacitación Ministerial (Portugués)":[30,6],
+"Material de Capacitación Evangelística (Inglés)":[30,7],
+"Material de Capacitación Pastoral (Inglés)":[30,8],
+"Material de Capacitación Ministerial (Inglés)":[30,9],
+"Biblias en Español (Cajas)":[200,10],
+"Biblias en Portugués (Cajas)":[100,11],
+"Biblias en Inglés (Cajas)":[300,12],
+"Tratados Evangelísticos en Español":[150,13],
+"Tratados Evangelísticos en Inglés":[140,14],
+"Tratados Evangelísticos en Portugués":[80,15]
+}
+}
