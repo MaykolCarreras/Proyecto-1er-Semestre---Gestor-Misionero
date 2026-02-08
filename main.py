@@ -3,12 +3,12 @@ from tkinter import messagebox
 from datetime import datetime,date
 import json
 
-
 with open('databases/resources_data.json','r',encoding='utf-8') as file:
             recursos_json=json.load(file)
 
 with open("databases/events_data.json" ,'r',encoding='utf-8') as file:
     events=json.load(file)
+    
 
 class app:
     def __init__(self):
@@ -225,10 +225,9 @@ class app:
             print(paño)
     
     def ver_detalles(self,k,año,mes):
-        with open("databases/events_data.json" ,'r',encoding='utf-8') as file:
-            events=json.load(file)
+
         b=f" Fecha Inicial: {events[año][mes][k]["fecha1"]} \n"
-        b+=f" Fecha Final: {events[año][mes][k]["fecha1"]} \n"
+        b+=f" Fecha Final: {events[año][mes][k]["fecha2"]} \n"
 
         a="Recursos:\n"
         for recurso in events[año][mes][k]["recursos"][0]:
@@ -335,7 +334,7 @@ class app:
         self.pais_elegido = ctk.StringVar(value="México")
         self.seleccion_menu = ctk.CTkOptionMenu(
             self.formulario_entrega,
-            values=["Mexico","Brasil","Estados Unidos"],
+            values=["México","Brasil","Estados Unidos"],
             corner_radius=0,
             fg_color=self.color_almost_black,
             text_color=self.color_texto,
@@ -542,7 +541,8 @@ class app:
 
             if elemento[0] == e[0]:
                 if ((e[1].get()).strip()=="") or (e[1].get()).strip() == "0" :
-                    self.recursos_elegidos[0].pop()
+                    #cambio aqui
+                    self.recursos_elegidos[0].pop(i)
                     print(self.recursos_elegidos)
                     return
                 else:
@@ -617,7 +617,7 @@ class app:
         
             hg=self.hora_elegida.get()
             hg=hg.strip()
-            hg = self.hora_elegida.get()
+            #hg = self.hora_elegida.get()
 
             if hg[2]==":" and hg[5]==":":
                 hg=hg.split(":")
@@ -787,9 +787,12 @@ class app:
         #Añadir a id's del año
         events[y]["ids"].append(id)
         #Añadir Timestamp
-        events[y]["timestamps"][0].append([self.fecha1,self.fecha2,self.recursos_elegidos])
+        
+        events[y]["timestamps"].append([self.fecha1.strftime("%Y-%m-%d %H:%M:%S"),self.fecha2.strftime("%Y-%m-%d %H:%M:%S"),self.recursos_elegidos])
+            
 
-        print(events)
+        with open("databases/events_data.json" ,'w',encoding='utf-8') as file:
+            json.dump(events,file,indent=4,ensure_ascii=False)
         
 
         

@@ -1,3 +1,25 @@
+1. Si, timestamps es para luego vreificar conflictos de recursos en las fechas. Si te das cuenta en el codigo al validar el evento nuevo trato de crear a partir del json de eventos un json temporal que me diga los recursos que tengo disponibles en ese momento, restandole al json de eventos los recursos de las timestamps correspondientes a ese intervalo. 2. Si, actualmente solo manejo los recursos materiales 3. Si, quisiera hacer formularios diferentes (en dependencia de como necesita el evento ser implementado) 4. Si te refieres a las lineas             for elem in self.recursos_elegidos[0]:
+                if elem[0] in error_pais[self.pais_elegido.get()]:
+                    messagebox.showwarning(message=f"Los recursos deben de estar acorde al idioma hablado en el pais ( País Elegido:{self.pais_elegido.get()} - Idioma:{idioma[self.pais_elegido.get()]}.)")
+                    return
+                if elem[0]==error_depends[self.pais_elegido.get()][0] or elem[0]==error_depends[self.pais_elegido.get()][1]:
+                    bit1=True
+                if elem[0]==error_depends[self.pais_elegido.get()][2]:
+                    bit2=True
+                
+            if bit1 and not(bit2):
+                messagebox.showwarning(message="El Material de Capacitación Evangelística y/o el Pastoral necesitan ser enviados junto con el ministerial ")
+                return
+            
+
+            messagebox.showinfo(message="Recursos Válidos") quizas esos return solo se ejecutan cuando hay un conflicto entre los recursos, imagino que es conveniente ya que si ya hay un conflicto no es necesario seguir revisando, pero revisa eso tambien, porque no estoy del todo seguro 5. Los IDs los pude globales para luego implementar una funcion de eliminar eventos, y que cad eventos tuviera un id único. Sobre los posibles errores: 1. ya, puse fecha2 2.         try:
+            events[y]["timestamps"].append([self.fecha1,self.fecha2,self.recursos_elegidos])
+        except:
+            events[y]["timestamps"].append([self.fecha1,self.fecha2,self.recursos_elegidos]) esto fue lo que puse para manejar eso 3. puse un # en esa linea repetida 4. self.recursos_elegidos[0][i].pop() puse eso así ahora
+
+
+
+
 ----------------------CODIGO PRINCIPAL--------------------
 import customtkinter as ctk
 from tkinter import messagebox
