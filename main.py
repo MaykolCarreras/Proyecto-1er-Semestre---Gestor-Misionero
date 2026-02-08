@@ -87,7 +87,7 @@ class app:
         )
 
         opciones:dict ={
-            "Listar los eventos":"listar",
+            "Listar los eventos \n (o Listar para eliminar los eventos)":"listar",
             "Añadir nuevo evento":"añadir",
         }
 
@@ -204,7 +204,6 @@ class app:
 
 
         try:
-            events[paño][pmes]
             for widget in self.listado.winfo_children():
                 widget.destroy()
 
@@ -258,11 +257,18 @@ class app:
             messagebox.showinfo(title=f"{events[año][mes][k]["nombre"]} ({events[año][mes][k]["lugar"]}) ",message = b, detail=a)
             return
         
-
+        c=False
         c=messagebox.askyesno(title=f"{events[año][mes][k]["nombre"]} ({events[año][mes][k]["lugar"]}) ",message = b, detail=a+"\n\nDesea Eliminar el evento?")
 
         if c:
+            events[año]["timestamps"].pop(events[año][mes][k]["tp_index"])
+            events[año]["ids"].pop(events[año]["ids"].index(k))
             events[año][mes].pop(k)
+            print(events)
+            with open("databases/events_data.json" ,'w',encoding='utf-8') as file:
+                json.dump(events,file,indent=4,ensure_ascii=False)
+            self.listar_eventos("eliminar")
+
 
             
             
@@ -329,6 +335,8 @@ class app:
             command=self.validar_fecha
         ).grid(column=3,row=1,columnspan=2,pady=(20,0),padx=(40,0))
         self.tipo.columnconfigure(3,pad=40)
+
+        
         
 
         # Formulario entrega ################################################################
@@ -472,11 +480,41 @@ class app:
 
         self.formulario_entrega.rowconfigure(3,pad=20)
 
+        ctk.CTkButton(
+            self.tipo,
+            text="Mostrar Recursos",
+            height=28,
+            width=28,
+            corner_radius=0,
+            fg_color="transparent",
+            hover_color=self.color_hover,
+            text_color=self.color_texto,
+            border_width=1,
+            border_color=self.color_terciario,
+            command=self.mostrar_recursos
+        ).grid(column=5,row=1,columnspan=2,pady=(20,0),padx=(40,0))
+
+
+
+
+        self.recursos_elegidos=[[],[]]
+
+        self.formulario_entrega.pack(fill="both", padx=14,pady=(4,0),anchor="n",ipady=10)
+        #.pack(anchor="n",expand=True,fill="both")
+
+        ##################################
+        #Packing de frames y funcion final
+        ##################################
+        self.cambiante.pack(fill="both", padx=14,pady=(4,0),anchor="n",expand=True)
+        
+        self.cambio_opcion("Entrega de Recursos")
+
+    def mostrar_recursos(self):
+        for widget in self.frame_recursos.winfo_children():
+            widget.destroy()
 
         i=1
         a=16*[1]
-
-
         for recurso,cant in recursos_json["materiales"].items():
             self.frame_recursos.columnconfigure(1,weight=10)
             a[i]=ctk.StringVar()
@@ -502,18 +540,9 @@ class app:
                 command=lambda k=[recurso,a[i]] :self.getvalue(k)
             ).grid(row=i,column=3,pady=(4,0),padx=(0,30))
             i+=1
-
-        self.recursos_elegidos=[[],[]]
-
-        self.formulario_entrega.pack(fill="both", padx=14,pady=(4,0),anchor="n",ipady=10)
-        #.pack(anchor="n",expand=True,fill="both")
-
-        ##################################
-        #Packing de frames y funcion final
-        ##################################
-        self.cambiante.pack(fill="both", padx=14,pady=(4,0),anchor="n",expand=True)
         self.frame_recursos.pack(fill="both", expand=True, padx=14,pady=(4,17),anchor="n",ipady=20)
-        self.cambio_opcion("Entrega de Recursos")
+
+
     
     def cambio_opcion(self,opcion):
         self.evento_elegido=opcion
@@ -552,12 +581,23 @@ class app:
                     self.recursos_elegidos[0][i][1]=int(e[1].get())
                     print(self.recursos_elegidos)
                     return
-                
+        
 
         try:
             if(int(e[1].get()) <= recursos_json["materiales"][e[0]][0]):
                 self.recursos_elegidos[0].append([e[0],int(e[1].get())])
                 print(self.recursos_elegidos)
+                x=""
+                y=""
+                for e in self.recursos_elegidos[0]:
+                    x= x + e[0] + ": " + str(e[1])  + "\n"
+                for e in self.recursos_elegidos[1]:
+                    y = y + e[0] +": "+ "\n"
+
+                if y!="":
+                    y = "\nPersonal elegido:" + y
+
+                messagebox.showinfo(message="Recursos materiales elegidos:\n" + x + y)
             else:
                 messagebox.showwarning(message="Probablemente hay un error en la cantidad de recursos")    
         except:
@@ -572,6 +612,10 @@ class app:
         messagebox.showinfo(message=f"Las entregas a {cty} se tardan {tiempo[cty]} días")
 
     def validar_fecha(self):
+        if (len(self.recursos_elegidos[0])==0) and (len(self.recursos_elegidos[1])==0):
+            messagebox.showerror(message="Tiene que seleccionar almenos un recurso")
+            return
+        
         meses_dict = {
             "Enero": 1, "Febrero": 2, "Marzo": 3, "Abril": 4,
             "Mayo": 5, "Junio": 6, "Julio": 7, "Agosto": 8,
@@ -656,7 +700,7 @@ class app:
 
         
     def validar_recursos(self):
-        
+    
         try:
             error_depends={
                 "México":["Material de Capacitación Evangelística (Español)","Material de Capacitación Pastoral (Español)","Material de Capacitación Ministerial (Español)"],
@@ -726,13 +770,14 @@ class app:
                 resources["humanos"][recurso[0]]-= recurso[1]
 
 
+        
+            for tp in events[str(fecha[1].year)]["timestamps"]:
+                a=datetime.strptime(tp[0],"%Y-%m-%d %H:%M:%S")
+                b=datetime.strptime(tp[1],"%Y-%m-%d %H:%M:%S")
 
-        for tp in events[str(fecha[1].year)]["timestamps"]:
-            a=datetime.strptime(tp[0],"%Y-%m-%d %H:%M:%S")
-            b=datetime.strptime(tp[1],"%Y-%m-%d %H:%M:%S")
+            if (len(events[str(fecha[1].year)]["timestamps"])!=0) and (fecha[0]<=a and a<=fecha[1]) or (fecha[0]<=b and b<=fecha[1]) or (a<=fecha[0] and fecha[1]<=b):
+                remove(tp[2])
 
-        if (fecha[0]<=a and a<=fecha[1]) or (fecha[0]<=b and b<=fecha[1]) or (a<=fecha[0] and fecha[1]<=b):
-            remove(tp[2])
 
         dictaux={
         "1":"Material de Capacitación Evangelística (Español)",
@@ -782,6 +827,7 @@ class app:
         events[y][m][id]["fecha2"]=self.fecha2.strftime("%Y-%m-%d %H:%M:%S")
         events[y][m][id]["lugar"]=self.pais_elegido.get()
         events[y][m][id]["recursos"]=self.recursos_elegidos
+        events[y][m][id]["tp_index"]=len(events[y]["timestamps"])
 
         #Añadir a id's del año
         events[y]["ids"].append(id)

@@ -10,7 +10,8 @@
         "fecha1": "2026-2-3 09:00:00",
         "fecha2": "2026-2-3 17:00:00",
         "lugar": "Mexico",
-        "recursos": [[["Material de Capacitación Evangelística (Español)",2],["Material de Capacitación Ministerial (Español)",2]],[]]
+        "recursos": [[["Material de Capacitación Evangelística (Español)",2],["Material de Capacitación Ministerial (Español)",2]],[]],
+        "tp_index":0
         }
 
     }
