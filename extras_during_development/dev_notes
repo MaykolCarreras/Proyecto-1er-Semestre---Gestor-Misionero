@@ -1,7 +1,21 @@
+#Cuando vuelva poner boni
+#
+#
+#
+#Poner un boton para cuando el usuario quiera listar los eventos pq es una operación un tanto mucha
+#Quizás hacer un delay y crearlo sin hacerle pack para que el usuario no vea
+#Quizas para iniciar si creo...nah
+#Hacer la logica de la validacion durante la escritura de la hora o hacer labels especificps para hora minuto y segundo
+#Tengo que añadirle index a las timestamps pq sino no pincha
+
+
+
 Por país tipo 
 1.
 2.
 3.
+
+
 
 1 Entrega de recursos
 2 Donación

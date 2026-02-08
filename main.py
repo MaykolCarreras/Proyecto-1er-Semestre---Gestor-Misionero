@@ -8,7 +8,7 @@ with open('databases/resources_data.json','r',encoding='utf-8') as file:
 
 with open("databases/events_data.json" ,'r',encoding='utf-8') as file:
     events=json.load(file)
-    
+
 
 class app:
     def __init__(self):
@@ -88,7 +88,7 @@ class app:
 
         opciones:dict ={
             "Listar los eventos":"listar",
-            "Añadir nuevo evento":"añadir"
+            "Añadir nuevo evento":"añadir",
         }
 
         for opcion,llave in opciones.items():
@@ -119,6 +119,8 @@ class app:
             self.menu_listado()
         if k=="añadir":
             self.menu_añadir()    
+
+        
 
     def menu_listado(self):
 
@@ -162,9 +164,25 @@ class app:
             text_color=self.color_texto,
             border_width=1,
             border_color=self.color_terciario,
-            command=lambda: self.listar_eventos()
+            command=lambda k="listar": self.listar_eventos(k)
         )
         self.botonlistar.pack(side="right",padx=8,pady=4)
+
+
+        self.botonlistar=ctk.CTkButton(
+            opcframe,
+            text="Listar para Eliminar",
+            height=28,
+            corner_radius=0,
+            fg_color="transparent",
+            hover_color=self.color_hover,
+            text_color=self.color_texto,
+            border_width=1,
+            border_color=self.color_terciario,
+            command=lambda k="eliminar": self.listar_eventos(k)
+        )
+        self.botonlistar.pack(side="right",padx=8,pady=4)
+
 
         self.listado = ctk.CTkScrollableFrame(
             self.body,
@@ -178,7 +196,7 @@ class app:
 
         opcframe.pack(fill="x",anchor="n",pady=(10,0),padx=14)
 
-    def listar_eventos(self):
+    def listar_eventos(self,modo):
         pmes = self.entry1.get()
         paño=self.entry2.get()
         pmes=pmes if  pmes!= "" else "1" 
@@ -198,7 +216,7 @@ class app:
                     fg_color="transparent",
                     hover_color=self.color_terciario,
                     corner_radius=0,
-                    command=lambda k=name:self.ver_detalles(k,paño,pmes)
+                    command=lambda k=name:self.ver_detalles(k,paño,pmes,modo)
                 ).pack(anchor="w",padx=7,pady=4)
 
         except KeyError:
@@ -224,7 +242,7 @@ class app:
             print(pmes)
             print(paño)
     
-    def ver_detalles(self,k,año,mes):
+    def ver_detalles(self,k,año,mes,m):
 
         b=f" Fecha Inicial: {events[año][mes][k]["fecha1"]} \n"
         b+=f" Fecha Final: {events[año][mes][k]["fecha2"]} \n"
@@ -236,16 +254,30 @@ class app:
         for recurso in events[año][mes][k]["recursos"][1]:
             a = a + f" {recurso[0]}\nCant: {recurso[1]} \n"
 
-        messagebox.showinfo(title=f"{events[año][mes][k]["nombre"]} ({events[año][mes][k]["lugar"]}) ",message = b, detail=a)
+        if m=="listar":
+            messagebox.showinfo(title=f"{events[año][mes][k]["nombre"]} ({events[año][mes][k]["lugar"]}) ",message = b, detail=a)
+            return
+        
+
+        c=messagebox.askyesno(title=f"{events[año][mes][k]["nombre"]} ({events[año][mes][k]["lugar"]}) ",message = b, detail=a+"\n\nDesea Eliminar el evento?")
+
+        if c:
+            events[año][mes].pop(k)
+
+            
+            
+        
+        
+            
+
 
     def menu_añadir(self):
 
         for widget in self.body.winfo_children():
             widget.destroy()
 
-        ###################
-        #Frame para el tipo
-        ###################
+        # Frame para el tipo ############################################################
+        
         
         self.tipo=ctk.CTkFrame(
             self.body,
@@ -257,15 +289,18 @@ class app:
         )
         self.tipo.pack(fill="both",padx=14,pady=(10,0),anchor="n",ipady=10)
 
+        ###################
+        #Llenando self.tipo
+        ###################
+
         ctk.CTkLabel(
             self.tipo,
             text="Tipo de evento",
             font=("Console",14,"bold"),
-            ).grid(column=1,row=1,pady=(20,0))
-        
+        ).grid(column=1,row=1,pady=(20,0))
+
         opciones=["Entrega de Recursos","Donación","Taller","Conferencias"]        
         self.seleccion = ctk.StringVar(value="Entrega de Recursos")
-
         self.seleccion_menu = ctk.CTkOptionMenu(
             self.tipo,
             values=opciones,
@@ -276,22 +311,34 @@ class app:
             button_color=self.color_secundario,
             button_hover_color=self.color_hover,
             variable=self.seleccion,
-            command=self.mostrar_frame
+            command=self.cambio_opcion
         ).grid(column=2,row=1,pady=(20,0))
-        
         self.tipo.columnconfigure(1,pad=40)
 
-
-        self.contenedor=ctk.CTkFrame(
-            self.body,
-            height=70,
-            fg_color=self.color_white,
+        ctk.CTkButton(
+            self.tipo,
+            text="Validar fecha y recursos",
+            height=28,
+            width=28,
             corner_radius=0,
+            fg_color="transparent",
+            hover_color=self.color_hover,
+            text_color=self.color_texto,
             border_width=1,
-            border_color=self.color_light
-        )
-        self.contenedor.pack(fill="both", padx=14,pady=(4,0),anchor="n",ipady=10)
+            border_color=self.color_terciario,
+            command=self.validar_fecha
+        ).grid(column=3,row=1,columnspan=2,pady=(20,0),padx=(40,0))
+        self.tipo.columnconfigure(3,pad=40)
+        
 
+        # Formulario entrega ################################################################
+        self.formulario_entrega=ctk.CTkFrame(
+            self.body,
+            fg_color=self.color_light,
+            corner_radius=0
+        )
+
+        # Frame para los recursos ############################################################
         self.frame_recursos=ctk.CTkScrollableFrame(
             self.body,
             height=80,
@@ -300,36 +347,25 @@ class app:
             border_width=1,
             border_color=self.color_light
         )
-        self.frame_recursos.pack(fill="both", expand=True, padx=14,pady=(4,17),anchor="n",ipady=20)
 
-        #####################
-        #¿Frame para errores?
-        #####################
-
-        #############
-        #Crear Frames
-        #############
-
-        self.crear_frames()
-        self.mostrar_frame("Entrega de Recursos")
-
-
-    def crear_frames(self):
-
-        ##########################
-        #Frame Entrega de Recursos
-        ##########################
-        self.formulario_entrega=ctk.CTkFrame(
-            self.contenedor,
-            fg_color=self.color_light,
-            corner_radius=0
+        # Frame cambiante ############################################################
+        self.cambiante=ctk.CTkFrame(
+            self.body,
+            height=45,
+            fg_color=self.color_white,
+            corner_radius=0,
+            border_width=1,
+            border_color=self.color_light,
         )
 
+        #################
+        #Llenando Frames
+        #################
         ctk.CTkLabel(
             self.formulario_entrega,
             text="Tipo de evento",
             font=("Console",12),
-            ).grid(column=1,row=1)
+        ).grid(column=1,row=1)
                 
         self.pais_elegido = ctk.StringVar(value="México")
         self.seleccion_menu = ctk.CTkOptionMenu(
@@ -405,41 +441,8 @@ class app:
             dropdown_font=("Console",10),
         ).grid(column=3,row=2)
 
-        self.titulo_fecha2=ctk.CTkLabel(self.formulario_entrega, text="Fecha Final")
-        self.label_fecha2=ctk.CTkLabel(self.formulario_entrega)
 
 
-        ctk.CTkLabel(self.formulario_entrega,text="").grid(column=1,row=5)
-        ctk.CTkLabel(self.formulario_entrega,text="").grid(column=2,row=5)
-
-
-        ctk.CTkButton(
-            self.formulario_entrega,
-            text="Validar",
-            height=28,
-            width=28,
-            corner_radius=0,
-            fg_color="transparent",
-            hover_color=self.color_hover,
-            text_color=self.color_texto,
-            border_width=1,
-            border_color=self.color_terciario,
-            command=self.validar_fecha
-        ).grid(column=1,row=6)
-
-        ctk.CTkButton(
-            self.formulario_entrega,
-            text="Añadir a la base de datos",
-            height=28,
-            width=28,
-            corner_radius=0,
-            fg_color="transparent",
-            hover_color=self.color_hover,
-            text_color=self.color_texto,
-            border_width=1,
-            border_color=self.color_terciario,
-            command=self.añadir_al_json
-        ).grid(column=2,row=6)
 
         self.formulario_entrega.columnconfigure(1,pad=40)
         self.formulario_entrega.columnconfigure(2,pad=40)
@@ -447,8 +450,14 @@ class app:
         self.formulario_entrega.columnconfigure(4,pad=40)
         self.formulario_entrega.rowconfigure(1,pad=10)
         self.formulario_entrega.rowconfigure(2,pad=10)
-        self.formulario_entrega.rowconfigure(5,pad=15)
 
+
+        ctk.CTkLabel(
+            self.formulario_entrega,
+            text="Hora Inicial",
+            font=("Console",12),
+            ).grid(column=1,row=3)
+        
         self.hora_elegida = ctk.StringVar(value="00:00:00")
         entryhora=ctk.CTkEntry(
             self.formulario_entrega, 
@@ -459,7 +468,9 @@ class app:
             text_color=self.color_texto,
             textvariable=self.hora_elegida
         )
-        entryhora.grid(column=1,row=4)
+        entryhora.grid(column=2,row=3)
+
+        self.formulario_entrega.rowconfigure(3,pad=20)
 
 
         i=1
@@ -494,43 +505,35 @@ class app:
 
         self.recursos_elegidos=[[],[]]
 
+        self.formulario_entrega.pack(fill="both", padx=14,pady=(4,0),anchor="n",ipady=10)
+        #.pack(anchor="n",expand=True,fill="both")
 
-        
-        ###############
-        #Frame Donacion
-        ###############
-        formulario_donacion=ctk.CTkFrame(
-            self.contenedor,
-            fg_color=self.color_texto,
-            corner_radius=0
-        )
+        ##################################
+        #Packing de frames y funcion final
+        ##################################
+        self.cambiante.pack(fill="both", padx=14,pady=(4,0),anchor="n",expand=True)
+        self.frame_recursos.pack(fill="both", expand=True, padx=14,pady=(4,17),anchor="n",ipady=20)
+        self.cambio_opcion("Entrega de Recursos")
+    
+    def cambio_opcion(self,opcion):
+        self.evento_elegido=opcion
+        #Se mantienen las fechas y lo elegido en el frame de opciones pq igual sirven para estos eventos
+        if opcion=="Entrega de Recursos":
+            self.mostrar_entrega()
+        if opcion=="Conferencias":
+            self.mostrar_conferencias()
+
+    def mostrar_entrega(self):
+        for widget in self.cambiante.winfo_children():
+            widget.destroy()
+
+        self.titulo_fecha2=ctk.CTkLabel(self.cambiante, text="Fecha y hora finales")
+        self.label_fecha2=ctk.CTkLabel(self.cambiante)
+
+    def mostrar_conferencias(self):
+        pass
 
 
-        #############
-        #Frame Taller
-        #############
-        formulario_taller=ctk.CTkFrame(
-            self.contenedor,
-            fg_color=self.color_terciario,
-            corner_radius=0
-        )
-        
-
-        ###################
-        #Frame Conferencias
-        ###################
-        formulario_conferencias=ctk.CTkFrame(
-            self.contenedor,
-            fg_color=self.color_hover,
-            corner_radius=0
-        )
-
-        self.frames={
-            "Entrega de Recursos":self.formulario_entrega,
-            "Donación":formulario_donacion,
-            "Taller":formulario_taller,
-            "Conferencias":formulario_conferencias
-        }
         
 
     def getvalue(self,e):
@@ -567,13 +570,6 @@ class app:
             "Estados Unidos":5
             }
         messagebox.showinfo(message=f"Las entregas a {cty} se tardan {tiempo[cty]} días")
-
-    def mostrar_frame(self,opcion):
-        self.evento_elegido=opcion
-        for frame in self.frames.values():
-            frame.pack_forget()
-
-        self.frames[opcion].pack(anchor="n",expand=True,fill="both")
 
     def validar_fecha(self):
         meses_dict = {
@@ -632,9 +628,9 @@ class app:
                 try:
                     self.fecha1=datetime(y,m,d,h,min,s)
                     print("Fecha Añadida con éxito")
-                    messagebox.showinfo(message=self.fecha1.strftime("%d-%m-%y %H:%M:%S"))
                 except ValueError as e:
                     messagebox.showerror(message=str(e))
+                    return
 
 
             tiempo={
@@ -644,14 +640,15 @@ class app:
             }
             self.fecha2 = self.fecha1+(datetime(2026,1,tiempo[self.pais_elegido.get()]+1)-datetime(2026,1,1))
 
-            self.titulo_fecha2.grid_forget()
-            self.label_fecha2.grid_forget()
+            self.titulo_fecha2.pack_forget()
+            self.label_fecha2.pack_forget()
             
-            self.titulo_fecha2.configure(text="Fecha Final")
+            self.titulo_fecha2.configure(text="Fecha y hora finales")
             self.label_fecha2.configure(text=self.fecha2.strftime("%Y-%m-%d %H:%M:%S"))
+            messagebox.showinfo(message=f"Fecha Final: {self.fecha2.strftime("%d-%m-%y %H:%M:%S")}")
 
-            self.titulo_fecha2.grid(column=1,row=5)
-            self.label_fecha2.grid(column=2,row=5)
+            self.titulo_fecha2.pack(side="left",padx=(65,20))
+            self.label_fecha2.pack(side="left")
             
 
             self.validar_recursos()
@@ -768,6 +765,8 @@ class app:
                 return
 
         messagebox.showinfo(message="Suficientes recursos en el tiempo solicitado para planificar el evento")
+        a = messagebox.askyesno(message="¿Desea añadir ya el evento a la base de datos?",detail="Si selecciona \"No\" tendra que pasar por la validación de nuevo para añadir el evento")
+        if a: self.añadir_al_json()
               
     def añadir_al_json(self):
         #Manejo de ID
