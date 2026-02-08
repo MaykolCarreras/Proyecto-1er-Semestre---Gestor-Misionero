@@ -6,6 +6,8 @@ from datetime import datetime,date
 with open("databases/events_data.json" ,'r',encoding='utf-8') as file:
         events=json.load(file)
 
+
+
 def limp():
     os.system('cls' if os.name == 'nt' else 'clear')
 
