@@ -275,8 +275,8 @@ class app:
         c=messagebox.askyesno(title=f"{events[año][mes][k]["nombre"]} ({events[año][mes][k]["lugar"]}) ",message = b, detail=a+"\n\nDesea Eliminar el evento?")
 
         if c:
-            events[año]["timestamps"].pop(events[año][mes][k]["tp_index"])
-            events[año]["ids"].pop(events[año]["ids"].index(k))
+            events[año]["timestamps"].pop(k, None)  # Eliminar por ID
+            events[año]["ids"].remove(k)  # Usar remove en lugar de pop
             events[año][mes].pop(k)
             print(events)
             with open("databases/events_data.json" ,'w',encoding='utf-8') as file:
@@ -638,7 +638,7 @@ class app:
         
 
         try:
-            if(int(e[1].get()) <= recursos_json["materiales"][e[0]]):
+            if(int(e[1].get()) <= recursos_json["materiales"][e[0]]) and int(e[1].get()) != 0:
                 self.recursos_elegidos[0].append([e[0],int(e[1].get())])
                 print(self.recursos_elegidos)
                 x=""
@@ -831,8 +831,8 @@ class app:
         for tp in events[str(fecha[1].year)]["timestamps"].values():
             a=datetime.strptime(tp[0],"%Y-%m-%d %H:%M:%S")
             b=datetime.strptime(tp[1],"%Y-%m-%d %H:%M:%S")
-        if (len(events[str(fecha[1].year)]["timestamps"])!=0) and (fecha[0]<=a and a<=fecha[1]) or (fecha[0]<=b and b<=fecha[1]) or (a<=fecha[0] and fecha[1]<=b):
-            remove(tp[2])
+            if (len(events[str(fecha[1].year)]["timestamps"])!=0) and (fecha[0]<=a and a<=fecha[1]) or (fecha[0]<=b and b<=fecha[1]) or (a<=fecha[0] and fecha[1]<=b):
+                remove(tp[2])
 
 
         dictaux={
