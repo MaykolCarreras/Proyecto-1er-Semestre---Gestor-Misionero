@@ -543,7 +543,7 @@ class app:
                 self.frame_recursos,
                 width=40,
                 height=10,
-                placeholder_text=str(cant[0]),
+                placeholder_text=str(cant),
                 textvariable=a[i]
             ).grid(row=i,column=2,padx=(4,4),pady=(4,0))
 
@@ -638,7 +638,7 @@ class app:
         
 
         try:
-            if(int(e[1].get()) <= recursos_json["materiales"][e[0]][0]):
+            if(int(e[1].get()) <= recursos_json["materiales"][e[0]]):
                 self.recursos_elegidos[0].append([e[0],int(e[1].get())])
                 print(self.recursos_elegidos)
                 x=""
@@ -821,14 +821,14 @@ class app:
         
         def remove(tp):
             for recurso in tp[0]:
-                resources["materiales"][recurso[0]][0]-= recurso[1]
+                resources["materiales"][recurso[0]]-= recurso[1]
 
             for recurso in tp[1]:
                 resources["humanos"][recurso[0]]-= recurso[1]
 
 
         
-        for tp in events[str(fecha[1].year)]["timestamps"]:
+        for tp in events[str(fecha[1].year)]["timestamps"].values():
             a=datetime.strptime(tp[0],"%Y-%m-%d %H:%M:%S")
             b=datetime.strptime(tp[1],"%Y-%m-%d %H:%M:%S")
         if (len(events[str(fecha[1].year)]["timestamps"])!=0) and (fecha[0]<=a and a<=fecha[1]) or (fecha[0]<=b and b<=fecha[1]) or (a<=fecha[0] and fecha[1]<=b):
@@ -856,7 +856,7 @@ class app:
 
         for recurso in self.recursos_elegidos[0]:
             print(f"\n\nLista procesada: {resources}\n")
-            if(resources["materiales"][recurso[0]][0]- recurso[1]) < 0:
+            if(resources["materiales"][recurso[0]]- recurso[1]) < 0:
                 messagebox.showerror(message=f"No hay suficientes {recurso[0]} para planificar el evento")
                 return
 
@@ -886,13 +886,12 @@ class app:
         events[y][m][id]["fecha2"]=self.fecha2.strftime("%Y-%m-%d %H:%M:%S")
         events[y][m][id]["lugar"]=self.pais_elegido.get()
         events[y][m][id]["recursos"]=self.recursos_elegidos
-        events[y][m][id]["tp_index"]=len(events[y]["timestamps"])
 
         #Añadir a id's del año
         events[y]["ids"].append(id)
         #Añadir Timestamp
         
-        events[y]["timestamps"].append([self.fecha1.strftime("%Y-%m-%d %H:%M:%S"),self.fecha2.strftime("%Y-%m-%d %H:%M:%S"),self.recursos_elegidos])
+        events[y]["timestamps"][id]=([self.fecha1.strftime("%Y-%m-%d %H:%M:%S"),self.fecha2.strftime("%Y-%m-%d %H:%M:%S"),self.recursos_elegidos])
             
 
         with open("databases/events_data.json" ,'w',encoding='utf-8') as file:
