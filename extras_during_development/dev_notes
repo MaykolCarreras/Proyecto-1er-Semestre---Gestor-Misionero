@@ -6,6 +6,7 @@
 - Hacer la logica de la validacion durante la escritura de la hora o hacer labels especificps para hora minuto y segundo
 - En un futuro arreglar que cuadno eliminas un evento sin tocaar el boton #entonces no sabes que boton es
 - restarle al count id, quizas no es tan necesario
+- ver el tema de la cantidad limitada de años, con un entrie sale
 
 # Notas durante desarrollo 2:
 - Optimizar las bases de datos

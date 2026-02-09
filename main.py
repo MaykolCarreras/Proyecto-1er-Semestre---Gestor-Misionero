@@ -835,12 +835,14 @@ class app:
                 resources["humanos"][recurso[0]]-= recurso[1]
 
 
-        
-        for tp in events[str(fecha[1].year)]["timestamps"].values():
-            a=datetime.strptime(tp[0],"%Y-%m-%d %H:%M:%S")
-            b=datetime.strptime(tp[1],"%Y-%m-%d %H:%M:%S")
-            if (len(events[str(fecha[1].year)]["timestamps"])!=0) and (fecha[0]<=a and a<=fecha[1]) or (fecha[0]<=b and b<=fecha[1]) or (a<=fecha[0] and fecha[1]<=b):
-                remove(tp[2])
+        try:
+            for tp in events[str(fecha[1].year)]["timestamps"].values():
+                a=datetime.strptime(tp[0],"%Y-%m-%d %H:%M:%S")
+                b=datetime.strptime(tp[1],"%Y-%m-%d %H:%M:%S")
+                if (len(events[str(fecha[1].year)]["timestamps"])!=0) and (fecha[0]<=a and a<=fecha[1]) or (fecha[0]<=b and b<=fecha[1]) or (a<=fecha[0] and fecha[1]<=b):
+                    remove(tp[2])
+        except:
+            print("No hay timestamps en ese año")
 
 
         dictaux={
