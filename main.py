@@ -36,11 +36,15 @@ class app:
         self.iniciar()
 
     def getevents(self):
-        with open('databases/resources_data.json','r',encoding='utf-8') as file:
-            recursos_json=json.load(file)
+        with open("databases/events_data.json",'r',encoding='utf-8') as file:
+            a=json.load(file)
+        return a
+            
     def getres(self):
-        with open("databases/events_data.json" ,'r',encoding='utf-8') as file:
-            events=json.load(file)
+        with open('databases/resources_data.json','r',encoding='utf-8') as file:
+            b=json.load(file)
+        return b
+
 
     def iniciar(self):
         self.sidebar = ctk.CTkFrame(
@@ -205,6 +209,8 @@ class app:
         opcframe.pack(fill="x",anchor="n",pady=(10,0),padx=14)
 
     def listar_eventos(self,modo):
+        events=self.getevents().copy()
+        print(events)
         pmes = self.entry1.get()
         paño=self.entry2.get()
         pmes=pmes if  pmes!= "" else "1" 
@@ -250,7 +256,7 @@ class app:
             print(paño)
     
     def ver_detalles(self,k,año,mes,m):
-
+        events=self.getevents().copy()
         b=f" Fecha Inicial: {events[año][mes][k]["fecha1"]} \n"
         b+=f" Fecha Final: {events[año][mes][k]["fecha2"]} \n"
 
@@ -548,8 +554,8 @@ class app:
                 text="Añadir a la lista",
                 corner_radius=0,
                 fg_color="transparent",
-                hover_color=self.color_hover,
-                text_color=self.color_texto,
+                hover_color="#959093",
+                text_color=self.color_hover,
                 border_width=1,
                 border_color=self.color_terciario,
                 command=lambda k=[recurso,a[i]] :self.getvalue(k)
@@ -749,8 +755,8 @@ class app:
 
         
     def validar_recursos(self):
-        self.getevents()
-        self.getres()
+        events=self.getevents().copy()
+        recursos_json=self.getres().copy()
     
         try:
             error_depends={
@@ -808,14 +814,12 @@ class app:
 #me falta añadir la diferenc
 
         resources=recursos_json.copy()
-        print(resources)
+        print(f"Lista bruta: {resources}")
 
         fecha=[self.fecha1,self.fecha2]
         
         
         def remove(tp):
-            print(tp)
-            print(resources)
             for recurso in tp[0]:
                 resources["materiales"][recurso[0]][0]-= recurso[1]
 
@@ -851,7 +855,7 @@ class app:
         
 
         for recurso in self.recursos_elegidos[0]:
-            print(resources)
+            print(f"\n\nLista procesada: {resources}\n")
             if(resources["materiales"][recurso[0]][0]- recurso[1]) < 0:
                 messagebox.showerror(message=f"No hay suficientes {recurso[0]} para planificar el evento")
                 return
@@ -867,6 +871,8 @@ class app:
         if a: self.añadir_al_json()
               
     def añadir_al_json(self):
+        self.getevents()
+        self.getres()
         #Manejo de ID
         id=str(events["idcount"])
         events["idcount"]+=1
@@ -891,6 +897,8 @@ class app:
 
         with open("databases/events_data.json" ,'w',encoding='utf-8') as file:
             json.dump(events,file,indent=4,ensure_ascii=False)
+        
+        self.recursos_elegidos=[[],[]]
         
 
         

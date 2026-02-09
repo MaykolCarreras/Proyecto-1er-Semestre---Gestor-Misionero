@@ -1,49 +1,22 @@
-{
-    "idcount": 3,
-    "2026": {
-        "ids": [
-            "1"
-        ],
-        "timestamps": [
-            [
-                "2026-2-3 09:00:00",
-                "2026-2-3 17:00:00",
-                [
-                    [
-                        [
-                            "Material de Capacitación Evangelística (Español)",
-                            2
-                        ],
-                        [
-                            "Material de Capacitación Ministerial (Español)",
-                            2
-                        ]
-                    ],
-                    []
-                ]
-            ]
-        ],
-        "1": {
-            "1": {
-                "nombre": "Entrega de Recursos",
-                "fecha1": "2026-2-3 09:00:00",
-                "fecha2": "2026-2-3 17:00:00",
-                "lugar": "Mexico",
-                "recursos": [
-                    [
-                        [
-                            "Material de Capacitación Evangelística (Español)",
-                            2
-                        ],
-                        [
-                            "Material de Capacitación Ministerial (Español)",
-                            2
-                        ]
-                    ],
-                    []
-                ],
-                "tp_index": 0
-            }
+{ "idcount":2,
+"2026":{
+    "ids":["1"],
+    "timestamps":[["2026-2-3 09:00:00","2026-2-3 17:00:00",[[["Material de Capacitación Evangelística (Español)",2],["Material de Capacitación Ministerial (Español)",2]],[]]]],
+    "1":{
+        "1":
+        {
+        "nombre":"Entrega de Recursos",
+        "fecha1": "2026-2-3 09:00:00",
+        "fecha2": "2026-2-3 17:00:00",
+        "lugar": "Mexico",
+        "recursos": [[["Material de Capacitación Evangelística (Español)",2],["Material de Capacitación Ministerial (Español)",2]],[]],
+        "tp_index":0
         }
+
     }
-}
+ }
+   
+
+    }
+ 
+ 

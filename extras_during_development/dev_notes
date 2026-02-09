@@ -5,6 +5,7 @@
 - Seguir desarrollando el tema de que los recursos no se validan bien ver quizas por que será
 - Hacer la logica de la validacion durante la escritura de la hora o hacer labels especificps para hora minuto y segundo
 - En un futuro arreglar que cuadno eliminas un evento sin tocaar el boton #entonces no sabes que boton es
+- restarle al count id, quizas no es tan necesario
 
 # Notas durante desarrollo 2:
 - Optimizar las bases de datos
