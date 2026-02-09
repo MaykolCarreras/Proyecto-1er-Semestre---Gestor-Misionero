@@ -572,6 +572,11 @@ class app:
             self.mostrar_entrega()
         if opcion=="Conferencias":
             self.mostrar_conferencias()
+        if opcion=="Taller":
+            self.mostrar_conferencias()
+        if opcion=="Donación":
+            self.mostrar_conferencias()
+
 
     def mostrar_entrega(self):
         for widget in self.cambiante.winfo_children():
@@ -581,7 +586,10 @@ class app:
         self.label_fecha2=ctk.CTkLabel(self.cambiante)
 
     def mostrar_conferencias(self):
-        pass
+        messagebox.showwarning(message="Opcion todavía en desarrollo, se cambiará de nuevo a entrega de recursos")
+        for widget in self.cambiante.winfo_children():
+            widget.destroy()
+        self.menu_añadir()
 
 
         
