@@ -1,33 +1,12 @@
-#Cuando vuelva poner boni
-#
-#
-#
-#Poner un boton para cuando el usuario quiera listar los eventos pq es una operación un tanto mucha
-#Quizás hacer un delay y crearlo sin hacerle pack para que el usuario no vea
-#Quizas para iniciar si creo...nah
-#Hacer la logica de la validacion durante la escritura de la hora o hacer labels especificps para hora minuto y segundo
-#Tengo que añadirle index a las timestamps pq sino no pincha
+# Por Hacer
 
+- Arrreglar id en los recursos
+- Poder ver los recursos disponibles !!!
+- Seguir desarrollando el tema de que los recursos no se validan bien ver quizas por que será
+- Hacer la logica de la validacion durante la escritura de la hora o hacer labels especificps para hora minuto y segundo
+- En un futuro arreglar que cuadno eliminas un evento sin tocaar el boton #entonces no sabes que boton es
 
-
-Por país tipo 
-1.
-2.
-3.
-
-
-
-1 Entrega de recursos
-2 Donación
-3 Talleres
-4 Conferencias
-
-Gestionar personas
-gestionar recursos
-Taller necesita tratado
-
-
-Notas durante desarrollo:
+# Notas durante desarrollo 2:
 - Optimizar las bases de datos
 - Optimizar los metodos de chequear exceptions
 - Validar el salto de año, por ahora no voy a permitir eventos de un año para otro
@@ -38,13 +17,30 @@ Notas durante desarrollo:
 - Poner un validador asd para que se ponga la opcion ... etc
 - arreglar los print solos con saltos de línea
 - Las variables de aclaración han de estar en un json o algo así
-
-añadir el evento al json ################
+- añadir el evento al json
 - Probar que datetime funciona en la validación de las fechas
-
-El objetivo ahora es tener algo estable que presentar en el peor de los casos
-
-
 - Despues hacer una forma de que se configure y que se haga con entries
 
----------------------------PUEDE HBAER ERROR ALTENER EVENTOS ENTRE AÑOS POR CONFIGURACIÓN DE LAS TIMESTAMPS
+
+
+
+# -------------PUEDE HABER ERROR AL TENER EVENTOS ENTRE AÑOS POR CONFIGURACIÓN DE LAS TIMESTAMPS-------------
+
+# Hecho:
+- Tengo que añadirle index a las timestamps pq sino no pincha
+- Cuadno hay error de sintaxis se agrega asd??
+- Checar el mensaje de los recursos seleccionados y 
+- Tengo que volver a cargar events de nuevo por cada iteración
+- Poner un boton para cuando el usuario quiera listar los eventos pq es una operación un tanto mucha
+
+
+
+
+
+# Por país tipo 
+
+## Tipo 1.
+1. Entrega de recursos
+2. Donación
+3. Talleres
+4. Conferencias

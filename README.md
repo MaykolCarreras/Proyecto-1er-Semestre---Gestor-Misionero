@@ -3,9 +3,9 @@ Esta app tiene como campo las organizaciones misioneras como Hearctry Missionary
 
 La siguiente app permite:
 - Gestión de eventos
-    - Ver/Añadir eventos en base a los recrusos disponibles
+    - Ver/Añadir/Eliminar eventos en base a los recrusos disponibles
 
-La siguiente app posee:
+La siguiente app posee además:
 - Sistema de pool de recursos (semi-implementado. Ver (1) al final del README.md.)
 
 # Eventos:

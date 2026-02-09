@@ -3,6 +3,7 @@ from tkinter import messagebox
 from datetime import datetime,date
 import json
 
+
 with open('databases/resources_data.json','r',encoding='utf-8') as file:
             recursos_json=json.load(file)
 
@@ -33,6 +34,13 @@ class app:
         self.principal.minsize(width=700,height=600)
 
         self.iniciar()
+
+    def getevents(self):
+        with open('databases/resources_data.json','r',encoding='utf-8') as file:
+            recursos_json=json.load(file)
+    def getres(self):
+        with open("databases/events_data.json" ,'r',encoding='utf-8') as file:
+            events=json.load(file)
 
     def iniciar(self):
         self.sidebar = ctk.CTkFrame(
@@ -537,6 +545,13 @@ class app:
                 self.frame_recursos,
                 width=20,
                 height=10,
+                text="Añadir a la lista",
+                corner_radius=0,
+                fg_color="transparent",
+                hover_color=self.color_hover,
+                text_color=self.color_texto,
+                border_width=1,
+                border_color=self.color_terciario,
                 command=lambda k=[recurso,a[i]] :self.getvalue(k)
             ).grid(row=i,column=3,pady=(4,0),padx=(0,30))
             i+=1
@@ -566,21 +581,54 @@ class app:
         
 
     def getvalue(self,e):
-        
+
         
         for i,elemento in enumerate(self.recursos_elegidos[0]):
             print(elemento[0])
 
             if elemento[0] == e[0]:
-                if ((e[1].get()).strip()=="") or (e[1].get()).strip() == "0" :
-                    #cambio aqui
-                    self.recursos_elegidos[0].pop(i)
+                try:
+                    if ((e[1].get()).strip()=="") or (e[1].get()).strip() == "0" :
+                        #cambio aqui
+                        self.recursos_elegidos[0].pop(i)
+                        print(self.recursos_elegidos)
+                        x=""
+                        y=""
+                        for e in self.recursos_elegidos[0]:
+                            x= x + e[0] + ": " + str(e[1])  + "\n"
+                        for e in self.recursos_elegidos[1]:
+                            y = y + e[0] +": "+ "\n"
+
+                        if x!="":
+                            x = "Recursos materiales elegidos:\n" + x
+                        if y!="":
+                            y = "\nPersonal elegido:" + y
+
+                        messagebox.showinfo(message=x + y)
+                        return
+                    else:
+                        self.recursos_elegidos[0][i][1]=int(e[1].get())
+                        print(self.recursos_elegidos)
+
+                        x=""
+                        y=""
+                        for e in self.recursos_elegidos[0]:
+                            x= x + e[0] + ": " + str(e[1])  + "\n"
+                        for e in self.recursos_elegidos[1]:
+                            y = y + e[0] +": "+ "\n"
+
+                        if x!="":
+                            x = "Recursos materiales elegidos:\n" + x
+                        if y!="":
+                            y = "\nPersonal elegido:" + y
+
+                        messagebox.showinfo(message=x + y)
+                        return
+                except:
                     print(self.recursos_elegidos)
+                    messagebox.showwarning(message="Probablemente hay un error de sintaxis en la cantidad de recursos")
                     return
-                else:
-                    self.recursos_elegidos[0][i][1]=int(e[1].get())
-                    print(self.recursos_elegidos)
-                    return
+
         
 
         try:
@@ -601,6 +649,7 @@ class app:
             else:
                 messagebox.showwarning(message="Probablemente hay un error en la cantidad de recursos")    
         except:
+            print(self.recursos_elegidos)
             messagebox.showwarning(message="Probablemente hay un error de sintaxis en la cantidad de recursos")
 
     def message_for_country(self,cty):
@@ -700,6 +749,8 @@ class app:
 
         
     def validar_recursos(self):
+        self.getevents()
+        self.getres()
     
         try:
             error_depends={
@@ -757,12 +808,14 @@ class app:
 #me falta añadir la diferenc
 
         resources=recursos_json.copy()
+        print(resources)
 
         fecha=[self.fecha1,self.fecha2]
         
         
         def remove(tp):
-
+            print(tp)
+            print(resources)
             for recurso in tp[0]:
                 resources["materiales"][recurso[0]][0]-= recurso[1]
 
@@ -771,12 +824,11 @@ class app:
 
 
         
-            for tp in events[str(fecha[1].year)]["timestamps"]:
-                a=datetime.strptime(tp[0],"%Y-%m-%d %H:%M:%S")
-                b=datetime.strptime(tp[1],"%Y-%m-%d %H:%M:%S")
-
-            if (len(events[str(fecha[1].year)]["timestamps"])!=0) and (fecha[0]<=a and a<=fecha[1]) or (fecha[0]<=b and b<=fecha[1]) or (a<=fecha[0] and fecha[1]<=b):
-                remove(tp[2])
+        for tp in events[str(fecha[1].year)]["timestamps"]:
+            a=datetime.strptime(tp[0],"%Y-%m-%d %H:%M:%S")
+            b=datetime.strptime(tp[1],"%Y-%m-%d %H:%M:%S")
+        if (len(events[str(fecha[1].year)]["timestamps"])!=0) and (fecha[0]<=a and a<=fecha[1]) or (fecha[0]<=b and b<=fecha[1]) or (a<=fecha[0] and fecha[1]<=b):
+            remove(tp[2])
 
 
         dictaux={
@@ -799,6 +851,7 @@ class app:
         
 
         for recurso in self.recursos_elegidos[0]:
+            print(resources)
             if(resources["materiales"][recurso[0]][0]- recurso[1]) < 0:
                 messagebox.showerror(message=f"No hay suficientes {recurso[0]} para planificar el evento")
                 return
