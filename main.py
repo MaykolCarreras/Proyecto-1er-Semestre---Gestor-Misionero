@@ -1,7 +1,8 @@
 import customtkinter as ctk
 from tkinter import messagebox
-from datetime import datetime,date
+from datetime import datetime,date,timedelta
 import json
+
 
 
 with open('databases/resources_data.json','r',encoding='utf-8') as file:
@@ -595,7 +596,8 @@ class app:
         
 
     def getvalue(self,e):
-
+        recursos_json=self.getres().copy()
+    
         
         for i,elemento in enumerate(self.recursos_elegidos[0]):
             print(elemento[0])
@@ -744,8 +746,9 @@ class app:
             "México":7,
             "Brasil":10,
             "Estados Unidos":5
-            }
-            self.fecha2 = self.fecha1+(datetime(2026,1,tiempo[self.pais_elegido.get()]+1)-datetime(2026,1,1))
+            }   
+            #pendiente cambiar a timedelta
+            self.fecha2 = self.fecha1+(timedelta(days=tiempo[self.pais_elegido.get()]))
 
             self.titulo_fecha2.pack_forget()
             self.label_fecha2.pack_forget()
@@ -799,7 +802,7 @@ class app:
 
             for elem in self.recursos_elegidos[0]:
                 if elem[0] in error_pais[self.pais_elegido.get()]:
-                    messagebox.showwarning(message=f"Los recursos deben de estar acorde al idioma hablado en el pais ( País Elegido:{self.pais_elegido.get()} - Idioma:{idioma[self.pais_elegido.get()]}.)")
+                    messagebox.showwarning(message=f"Los recursos deben de estar acorde al idioma hablado en el pais elegido. \nPaís Elegido: {self.pais_elegido.get()}. \nIdioma: {idioma[self.pais_elegido.get()]}.")
                     return
                 if elem[0]==error_depends[self.pais_elegido.get()][0] or elem[0]==error_depends[self.pais_elegido.get()][1]:
                     bit1=True
@@ -839,7 +842,7 @@ class app:
             for tp in events[str(fecha[1].year)]["timestamps"].values():
                 a=datetime.strptime(tp[0],"%Y-%m-%d %H:%M:%S")
                 b=datetime.strptime(tp[1],"%Y-%m-%d %H:%M:%S")
-                if (len(events[str(fecha[1].year)]["timestamps"])!=0) and (fecha[0]<=a and a<=fecha[1]) or (fecha[0]<=b and b<=fecha[1]) or (a<=fecha[0] and fecha[1]<=b):
+                if (len(events[str(fecha[1].year)]["timestamps"])!=0) and ((fecha[0]<=a and a<=fecha[1]) or (fecha[0]<=b and b<=fecha[1]) or (a<=fecha[0] and fecha[1]<=b)):
                     remove(tp[2])
         except:
             print("No hay timestamps en ese año")
@@ -890,6 +893,15 @@ class app:
         m=str(self.fecha1.month)
     
         #Añadir el evento al json
+        if y not in events.keys():
+            events[y]={}
+            events[y][m]={}
+            events[y]["ids"]=[]
+            events[y]["timestamps"]={}
+        elif m not in events[y].keys():
+            events[y][m]={}
+
+
         events[y][m][id]={}
         events[y][m][id]["nombre"]=self.evento_elegido
         events[y][m][id]["fecha1"]=self.fecha1.strftime("%Y-%m-%d %H:%M:%S")
