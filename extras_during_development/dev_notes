@@ -7,6 +7,9 @@
 - En un futuro arreglar que cuadno eliminas un evento sin tocaar el boton #entonces no sabes que boton es
 - restarle al count id, quizas no es tan necesario
 - ver el tema de la cantidad limitada de años, con un entrie sale
+- considerando poner globales los diccionarios de los tiempos y eso, las opciones vaya
+- mostrar los recursos elegidos en la validación
+- Poner mensajes de excepcinones menos genericos, ejemplo cuadno no hay eventos en un mes
 
 # Notas durante desarrollo 2:
 - Optimizar las bases de datos

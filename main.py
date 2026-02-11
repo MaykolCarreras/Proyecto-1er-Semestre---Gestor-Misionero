@@ -211,9 +211,17 @@ class app:
 
     def listar_eventos(self,modo):
         events=self.getevents().copy()
-        print(events)
+
         pmes = self.entry1.get()
         paño=self.entry2.get()
+        if pmes=="timestamps" or pmes=="ids" or paño=="ids" or paño=="timestamps" or paño=="idcount":
+            if paño=="idcount": 
+                messagebox.showerror(message="\"idcount\" no es un argumento válido")
+                return
+
+            messagebox.showerror(message="Ni \"timestamps\" ni \"ids\" son argumentos válidos")
+            return
+        
         pmes=pmes if  pmes!= "" else "1" 
         paño=paño if paño != "" else "2026"
 
@@ -765,7 +773,7 @@ class app:
 
 
         
-    def validar_recursos(self):
+    def validar_recursos(self,re=False):
         events=self.getevents().copy()
         recursos_json=self.getres().copy()
     
@@ -813,8 +821,8 @@ class app:
                 messagebox.showwarning(message="El Material de Capacitación Evangelística y/o el Pastoral necesitan ser enviados junto con el ministerial ")
                 return
             
-
-            messagebox.showinfo(message="Recursos Válidos")
+            if re==False:
+                messagebox.showinfo(message="Recursos Válidos")
                     
             
 
@@ -837,15 +845,24 @@ class app:
             for recurso in tp[1]:
                 resources["humanos"][recurso[0]]-= recurso[1]
 
-
+        ff=[]
+        fi=[]
         try:
             for tp in events[str(fecha[1].year)]["timestamps"].values():
                 a=datetime.strptime(tp[0],"%Y-%m-%d %H:%M:%S")
                 b=datetime.strptime(tp[1],"%Y-%m-%d %H:%M:%S")
                 if (len(events[str(fecha[1].year)]["timestamps"])!=0) and ((fecha[0]<=a and a<=fecha[1]) or (fecha[0]<=b and b<=fecha[1]) or (a<=fecha[0] and fecha[1]<=b)):
+                    fi.append(a)
+                    ff.append(b)
                     remove(tp[2])
         except:
             print("No hay timestamps en ese año")
+
+        
+
+                
+
+
 
 
         dictaux={
@@ -870,18 +887,81 @@ class app:
         for recurso in self.recursos_elegidos[0]:
             print(f"\n\nLista procesada: {resources}\n")
             if(resources["materiales"][recurso[0]]- recurso[1]) < 0:
-                messagebox.showerror(message=f"No hay suficientes {recurso[0]} para planificar el evento")
+                if re==False:
+                    messagebox.showerror(message=f"No hay suficientes {recurso[0]} para planificar el evento")
+                    opc:bool=False
+                    opc = messagebox.askyesno(message="¿Desea encontrar un hueco para planificar el evento?")
+                    if opc:
+                        self.encontrar_hueco(fi,ff)
+                else: self.encontrar_hueco(fi,ff,True)
+
                 return
 
-
+        #Implementar encontrar hueco aquí
         for recurso in self.recursos_elegidos[1]:
             if (resources["humanos"][recurso[0]]- recurso[1]) < 0:
                 messagebox.showerror(message=f"No hay suficientes {recurso[0]} para planificar el evento")
                 return
 
+        if re:
+            asd=False
+            asd=messagebox.askyesnocancel(message=f"Nueva Fecha Inicial: {self.fecha1}\n Nueva Fecha Final: {self.fecha2} \n ¿Está de acuerdo con esta fecha?")
+            if asd==False:
+                self.encontrar_hueco(fi,ff)
+            if asd==None:
+                messagebox.showwarning(message="Planificación de evento cancelada.")
+                self.menu_añadir()
+                return
+
+
         messagebox.showinfo(message="Suficientes recursos en el tiempo solicitado para planificar el evento")
         a = messagebox.askyesno(message="¿Desea añadir ya el evento a la base de datos?",detail="Si selecciona \"No\" tendra que pasar por la validación de nuevo para añadir el evento")
         if a: self.añadir_al_json()
+    
+    def encontrar_hueco(self,a,b,re=False):
+        if re==False:
+            self.opc1=False
+            self.opc1=messagebox.askyesnocancel(
+                title="Buscador de Sugerencias",
+                message="¿Desea buscar un hueco para su evento después de la fecha seleccionada?",
+                detail="Si selecciona \"No\" se asumirá que desea buscar un hueco antes. \n Persione \"Cancelar\" para salir.  "
+                )
+            if type(self.opc1)==None:
+                messagebox.showwarning(message="Planificación de evento cancelada.")
+                self.menu_añadir()
+                return
+        
+
+        
+        tiempo={
+            "México":7,
+            "Brasil":10,
+            "Estados Unidos":5
+            }
+        a=self.sort(a)
+        b=self.sort(b)
+        a.reverse()
+        
+
+
+        if  self.opc1==True:
+            self.fecha1=(b[0]+timedelta(days=1))
+            self.fecha2 = self.fecha1+(timedelta(days=tiempo[self.pais_elegido.get()]))
+            self.validar_recursos(True)
+        else:
+            self.fecha2=(a[0]-timedelta(days=1))
+            self.fecha1 = self.fecha2-(timedelta(days=tiempo[self.pais_elegido.get()]))
+            self.validar_recursos(True)
+
+    def sort (self,arr):
+        i=1
+        while i<len(arr):
+    
+            while i!=0 and arr[i-1]>arr[i]:
+                arr[i],arr[i-1] = arr[i-1],arr[i]
+                i-=1
+            i+=1
+        return(arr)
               
     def añadir_al_json(self):
         self.getevents()
