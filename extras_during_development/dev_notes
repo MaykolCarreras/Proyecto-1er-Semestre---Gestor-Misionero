@@ -11,6 +11,8 @@
 - mostrar los recursos elegidos en la validación
 - Poner mensajes de excepcinones menos genericos, ejemplo cuadno no hay eventos en un mes
 
+- Caso de que no haya òsible reubidcación cpon stock insuficiente 
+
 # Notas durante desarrollo 2:
 - Optimizar las bases de datos
 - Optimizar los metodos de chequear exceptions

@@ -776,7 +776,16 @@ class app:
     def validar_recursos(self,re=False):
         events=self.getevents().copy()
         recursos_json=self.getres().copy()
-    
+        
+        if(re==False):
+            j=0
+
+        j+=1
+
+        if re==True and j==10:
+            messagebox.showwarning(message="Planificación de evento cancelada. No hay un hueco cerca para planificar el evento", detail="Le recomeendamos planificar el evento en otra fecha.")
+            return
+
         try:
             error_depends={
                 "México":["Material de Capacitación Evangelística (Español)","Material de Capacitación Pastoral (Español)","Material de Capacitación Ministerial (Español)"],
@@ -857,10 +866,13 @@ class app:
                     remove(tp[2])
         except:
             print("No hay timestamps en ese año")
+            if(re==True):
+                messagebox.showwarning(message="Planificación de evento cancelada. No hay suficientes recursos para planificarlo.")
+                self.menu_añadir()
+                return
+
 
         
-
-                
 
 
 
@@ -892,6 +904,7 @@ class app:
                     opc:bool=False
                     opc = messagebox.askyesno(message="¿Desea encontrar un hueco para planificar el evento?")
                     if opc:
+                        
                         self.encontrar_hueco(fi,ff)
                 else: self.encontrar_hueco(fi,ff,True)
 
@@ -921,11 +934,7 @@ class app:
     def encontrar_hueco(self,a,b,re=False):
         if re==False:
             self.opc1=False
-            self.opc1=messagebox.askyesnocancel(
-                title="Buscador de Sugerencias",
-                message="¿Desea buscar un hueco para su evento después de la fecha seleccionada?",
-                detail="Si selecciona \"No\" se asumirá que desea buscar un hueco antes. \n Persione \"Cancelar\" para salir.  "
-                )
+
             if type(self.opc1)==None:
                 messagebox.showwarning(message="Planificación de evento cancelada.")
                 self.menu_añadir()
