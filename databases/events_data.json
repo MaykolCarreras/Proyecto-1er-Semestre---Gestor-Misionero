@@ -1,11 +1,13 @@
 {
-    "idcount": 6,
+    "idcount": 10,
     "2026": {
         "ids": [
             "2",
             "3",
             "4",
-            "5"
+            "5",
+            "6",
+            "7"
         ],
         "timestamps": {
             "2": [
@@ -50,6 +52,32 @@
             "5": [
                 "2026-01-17 00:00:00",
                 "2026-01-24 00:00:00",
+                [
+                    [
+                        [
+                            "Material de Capacitación Ministerial (Español)",
+                            40
+                        ]
+                    ],
+                    []
+                ]
+            ],
+            "6": [
+                "2026-01-25 00:00:00",
+                "2026-02-01 00:00:00",
+                [
+                    [
+                        [
+                            "Material de Capacitación Ministerial (Español)",
+                            40
+                        ]
+                    ],
+                    []
+                ]
+            ],
+            "7": [
+                "2026-02-02 00:00:00",
+                "2026-02-09 00:00:00",
                 [
                     [
                         [
@@ -121,7 +149,105 @@
                     ],
                     []
                 ]
+            },
+            "6": {
+                "nombre": "Entrega de Recursos",
+                "fecha1": "2026-01-25 00:00:00",
+                "fecha2": "2026-02-01 00:00:00",
+                "lugar": "México",
+                "recursos": [
+                    [
+                        [
+                            "Material de Capacitación Ministerial (Español)",
+                            40
+                        ]
+                    ],
+                    []
+                ]
             }
+        },
+        "2": {
+            "7": {
+                "nombre": "Entrega de Recursos",
+                "fecha1": "2026-02-02 00:00:00",
+                "fecha2": "2026-02-09 00:00:00",
+                "lugar": "México",
+                "recursos": [
+                    [
+                        [
+                            "Material de Capacitación Ministerial (Español)",
+                            40
+                        ]
+                    ],
+                    []
+                ]
+            }
+        }
+    },
+    "2025": {
+        "12": {
+            "8": {
+                "nombre": "Entrega de Recursos",
+                "fecha1": "2025-12-24 00:00:00",
+                "fecha2": "2025-12-31 00:00:00",
+                "lugar": "México",
+                "recursos": [
+                    [
+                        [
+                            "Material de Capacitación Ministerial (Español)",
+                            40
+                        ]
+                    ],
+                    []
+                ]
+            },
+            "9": {
+                "nombre": "Entrega de Recursos",
+                "fecha1": "2025-12-16 00:00:00",
+                "fecha2": "2025-12-23 00:00:00",
+                "lugar": "México",
+                "recursos": [
+                    [
+                        [
+                            "Material de Capacitación Ministerial (Español)",
+                            40
+                        ]
+                    ],
+                    []
+                ]
+            }
+        },
+        "ids": [
+            "8",
+            "9"
+        ],
+        "timestamps": {
+            "8": [
+                "2025-12-24 00:00:00",
+                "2025-12-31 00:00:00",
+                [
+                    [
+                        [
+                            "Material de Capacitación Ministerial (Español)",
+                            40
+                        ]
+                    ],
+                    []
+                ]
+            ],
+            "9": [
+                "2025-12-16 00:00:00",
+                "2025-12-23 00:00:00",
+                [
+                    [
+                        [
+                            "Material de Capacitación Ministerial (Español)",
+                            40
+                        ]
+                    ],
+                    []
+                ]
+            ]
         }
     }
 }

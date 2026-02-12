@@ -12,6 +12,8 @@
 - Poner mensajes de excepcinones menos genericos, ejemplo cuadno no hay eventos en un mes
 
 - Caso de que no haya òsible reubidcación cpon stock insuficiente 
+- me doy cuenta de que cuando elimino eventos se me quedan las keys..eso me pude dar bateo
+.ragno de las fechas
 
 # Notas durante desarrollo 2:
 - Optimizar las bases de datos

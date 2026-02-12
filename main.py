@@ -233,8 +233,8 @@ class app:
             for name,event in events[paño][pmes].items():
                 ctk.CTkButton(
                     self.listado,
-                    text=f"#{name}: [{event["fecha1"]} - {event["fecha2"]}] - {event["nombre"]} - {event["lugar"]}",
-                    font=("Calibri",10,"italic"),
+                    text=f"[#{name}] Fecha: [ {event["fecha1"][0:10]} - {event["fecha2"][0:10]} ]  Evento: {event["nombre"]} - {event["lugar"]}",
+                    font=("Calibri",14,"italic"),
                     fg_color="transparent",
                     hover_color=self.color_terciario,
                     corner_radius=0,
@@ -778,11 +778,11 @@ class app:
         recursos_json=self.getres().copy()
         
         if(re==False):
-            j=0
+            self.j=0
 
-        j+=1
+        self.j+=1
 
-        if re==True and j==10:
+        if re==True and self.j==10:
             messagebox.showwarning(message="Planificación de evento cancelada. No hay un hueco cerca para planificar el evento", detail="Le recomeendamos planificar el evento en otra fecha.")
             return
 
@@ -865,14 +865,7 @@ class app:
                     ff.append(b)
                     remove(tp[2])
         except:
-            print("No hay timestamps en ese año")
-            if(re==True):
-                messagebox.showwarning(message="Planificación de evento cancelada. No hay suficientes recursos para planificarlo.")
-                self.menu_añadir()
-                return
-
-
-        
+            print("No hay timestamps en ese año")        
 
 
 
@@ -899,12 +892,15 @@ class app:
         for recurso in self.recursos_elegidos[0]:
             print(f"\n\nLista procesada: {resources}\n")
             if(resources["materiales"][recurso[0]]- recurso[1]) < 0:
+                if(re==True and ff==[] and fi==[]):
+                    messagebox.showwarning(message="Planificación de evento cancelada. No hay suficientes recursos para planificarlo.")
+                    self.menu_añadir()
+                    return
                 if re==False:
                     messagebox.showerror(message=f"No hay suficientes {recurso[0]} para planificar el evento")
                     opc:bool=False
                     opc = messagebox.askyesno(message="¿Desea encontrar un hueco para planificar el evento?")
                     if opc:
-                        
                         self.encontrar_hueco(fi,ff)
                 else: self.encontrar_hueco(fi,ff,True)
 
@@ -934,7 +930,11 @@ class app:
     def encontrar_hueco(self,a,b,re=False):
         if re==False:
             self.opc1=False
-
+            self.opc1=messagebox.askyesnocancel(
+                title="Buscador de Sugerencias",
+                message="¿Desea buscar un hueco para su evento después de la fecha seleccionada?",
+                detail="Si selecciona \"No\" se asumirá que desea buscar un hueco antes. \n Persione \"Cancelar\" para salir.  "
+                )
             if type(self.opc1)==None:
                 messagebox.showwarning(message="Planificación de evento cancelada.")
                 self.menu_añadir()
